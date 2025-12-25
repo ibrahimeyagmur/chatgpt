@@ -29,7 +29,7 @@ export function formatMessagesForApi(
     attachments?: Array<{ type: string; data: string; name: string }>
   }>
 ): Array<{
-  role: string
+  role: 'user' | 'assistant' | 'system'
   content: string | Array<{ type: string; text?: string; image_url?: { url: string } }>
 }> {
   return messages.map(msg => {

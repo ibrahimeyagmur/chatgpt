@@ -29,8 +29,7 @@ export function ChatPage() {
   const displayBaseUrl = settings.baseUrl || 'https://api.openai.com'
   const [selectedModel, setSelectedModel] = useState(settings.lastSelectedModelId || 'gpt-4o')
   const [showApiCard, setShowApiCard] = useState(false)
-  const [modelCount, setModelCount] = useState<number | null>(null)
-  const cardTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const cardTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const isHoveringCard = useRef(false)
 
   const startCloseTimer = useCallback(() => {
@@ -173,12 +172,6 @@ export function ChatPage() {
                   <span className="text-chat-text-secondary">Base URL</span>
                   <span className="text-chat-text truncate max-w-[140px]" title={displayBaseUrl}>
                     {displayBaseUrl.replace(/^https?:\/\//, '')}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-chat-text-secondary">Modeller</span>
-                  <span className="text-chat-text">
-                    {modelCount !== null ? `${modelCount} model` : 'Yüklenmedi'}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
