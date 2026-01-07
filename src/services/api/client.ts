@@ -17,6 +17,13 @@ export function getApiConfig(): { baseUrl: string; apiKey: string | null } {
   }
 }
 
+export function resolveBaseUrl(baseUrl: string): string {
+  if (baseUrl.includes('api.loratech.dev')) {
+    return '/api/loratech'
+  }
+  return baseUrl
+}
+
 export async function apiRequest<T>(
   endpoint: string,
   options: RequestInit = {}
@@ -27,13 +34,7 @@ export async function apiRequest<T>(
     throw new Error('API anahtarı gerekli')
   }
 
-  let finalBaseUrl = baseUrl
-
-  // Eğer base URL api.loratech.dev ise proxy kullan
-  if (baseUrl.includes('api.loratech.dev')) {
-    finalBaseUrl = '/api/loratech'
-  }
-
+  const finalBaseUrl = resolveBaseUrl(baseUrl)
   const url = `${finalBaseUrl}${endpoint}`
 
   const response = await fetch(url, {
