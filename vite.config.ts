@@ -7,5 +7,14 @@ export default defineConfig({
     alias: {
       '@': '/src'
     }
+  },
+  server: {
+    proxy: {
+      '/api/loratech': {
+        target: 'https://api.loratech.dev',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/loratech/, '')
+      }
+    }
   }
 })

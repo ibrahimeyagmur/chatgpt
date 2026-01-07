@@ -5,7 +5,7 @@ export function getApiConfig(): { baseUrl: string; apiKey: string | null } {
   if (!settings) {
     return { baseUrl: DEFAULT_BASE_URL, apiKey: null }
   }
-  
+
   try {
     const parsed = JSON.parse(settings)
     return {
@@ -22,13 +22,20 @@ export async function apiRequest<T>(
   options: RequestInit = {}
 ): Promise<T> {
   const { baseUrl, apiKey } = getApiConfig()
-  
+
   if (!apiKey) {
     throw new Error('API anahtarı gerekli')
   }
-  
-  const url = `${baseUrl}${endpoint}`
-  
+
+  let finalBaseUrl = baseUrl
+
+  // Eğer base URL api.loratech.dev ise proxy kullan
+  if (baseUrl.includes('api.loratech.dev')) {
+    finalBaseUrl = '/api/loratech'
+  }
+
+  const url = `${finalBaseUrl}${endpoint}`
+
   const response = await fetch(url, {
     ...options,
     headers: {
@@ -37,11 +44,11 @@ export async function apiRequest<T>(
       ...options.headers
     }
   })
-  
+
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}))
     throw new Error(errorData.error?.message || `HTTP ${response.status}`)
   }
-  
+
   return response.json()
 }
